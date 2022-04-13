@@ -19,6 +19,9 @@
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+;; font setting
+(add-to-list 'default-frame-alist '(font . "JetBrainsMono Nerd Font Italic 11" ))
+
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -58,6 +61,11 @@
 ;; transparency
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
+
+(use-package dashboard
+  :ensure t
+  :config
+  (dashboard-setup-startup-hook))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
