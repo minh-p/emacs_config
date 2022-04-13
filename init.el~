@@ -28,8 +28,8 @@
 
 ;; column number relative and normal - like vim :)
 (column-number-mode)
-(global-display-line-numbers-mode)
-(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode t)
+(setq display-line-numbers 'relative)
 
 (use-package undo-fu)
 
@@ -55,7 +55,6 @@
       doom-themes-enable-italic t)
 (load-theme 'doom-tokyo-night t)
 
-;; transparency
 (set-frame-parameter (selected-frame) 'alpha '(85 . 85))
 (add-to-list 'default-frame-alist '(alpha . (85 . 85)))
 
@@ -64,7 +63,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(doom-themes solarized-theme use-package evil)))
+ '(package-selected-packages '(solarized-theme use-package evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
