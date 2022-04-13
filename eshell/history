@@ -37,3 +37,9 @@ ls -a
 rm .gitignore
 eixt
 exit
+git status
+git add .
+git commit -m "some config"
+git push
+git status
+git add .
