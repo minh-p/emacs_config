@@ -55,7 +55,6 @@
 
 ;; load evil
 (use-package evil
-  :ensure t ;; install the evil package if not installed
   :init ;; tweak evil's configuration before loading it
   (setq evil-search-module 'evil-search)
   (setq evil-ex-complete-emacs-commands nil)
@@ -125,7 +124,10 @@
   :hook (org-mode . dw/org-mode-setup)
   :config
   (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers t))
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-clock-sound "~/.config/emacs/bell.wav"
+        ))
 
 (require 'org-faces)
 (with-eval-after-load 'org-faces)
@@ -169,7 +171,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(org-bullets lsp-mode doom-themes solarized-theme use-package evil)))
+   '(fzf org-bullets lsp-mode doom-themes solarized-theme use-package evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -177,3 +179,5 @@
  ;; If there is more than one, they won't work right.
  )
 (put 'downcase-region 'disabled nil)
+
+(use-package fzf)
