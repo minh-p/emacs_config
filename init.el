@@ -12,26 +12,13 @@
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
+(setq make-backup-files nil)
+(setq custom-tab-width 4)
+(setq-default electric-indent-inhibit t)
+(setq-default c-basic-offset 4)
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-
-;; PRODUCTIVITY
-(setq org-directory "~/org")
-(setq org-agenda-files '("Tasks.org" "Birthdays.org" "Habits.org"))
-
-;; If you only want to see the agenda for today
-;; (setq org-agenda-span 'day)
-
-(setq org-agenda-start-with-log-mode t)
-(setq org-log-done 'time)
-(setq org-log-into-drawer t)
-
-;; Custom org agenda keywords
-(setq org-todo-keywords
-  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
-    (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
-
 
 ;; Make ESC quit prompts
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
@@ -63,6 +50,7 @@
   (setq evil-undo-system 'undo-fu)
   (setq evil-shift-round nil)
   (setq evil-want-C-u-scroll t)
+  (setq evil-shift-width 4)
   :config ;; tweak evil after loading it
   (evil-mode)
   ;; example how to map a command in normal mode (called 'normal state' in evil)
@@ -72,11 +60,11 @@
   :ensure t)
 (setq doom-themes-enable-bold t
       doom-themes-enable-italic t)
-(load-theme 'doom-tokyo-night t)
+(load-theme 'doom-solarized-light t)
 
 ;; transparency
-(set-frame-parameter (selected-frame) 'alpha '(85 . 85))
-(add-to-list 'default-frame-alist '(alpha . (85 . 85)))
+(set-frame-parameter (selected-frame) 'alpha '(100 . 100))
+(add-to-list 'default-frame-alist '(alpha . (100 . 100)))
 
 ;; dashboard configuration
 (use-package dashboard
@@ -114,7 +102,7 @@
   :hook (lsp-mode . lsp-ui-mode))
 
 (defun dw/org-mode-setup ()
-  (org-indent-mode)
+  (org-indent-mode t)
   (variable-pitch-mode 1)
   (auto-fill-mode 0)
   (visual-line-mode 1)
@@ -127,6 +115,16 @@
         org-hide-emphasis-markers t
         org-pretty-entities t
         org-clock-sound "~/.config/emacs/bell.wav"
+	org-startup-with-inline-images t
+	org-hide-leading-stars t
+	org-directory "~/org"
+	org-agenda-files '("Tasks.org" "Birthdays.org" "Habits.org")
+	org-agenda-start-with-log-mode t
+	org-log-done 'time
+	org-log-into-drawer t
+	org-todo-keywords
+	  '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+	    (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)"))
         ))
 
 (require 'org-faces)
@@ -153,6 +151,12 @@
                 (org-level-8 . 1.1)))
     (set-face-attribute (car face) nil :font "JetBrainsMono Nerd Font" :weight 'regular :height (cdr face)))
 
+(org-babel-do-load-languages 'org-babel-load-languages
+    '(
+        (shell . t)
+    )
+)
+
 ;; Make sure org-indent face is available
 (require 'org-indent)
 
@@ -171,13 +175,48 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(fzf org-bullets lsp-mode doom-themes solarized-theme use-package evil)))
+   '(projectile dap-mode lsy-ivy helm-lsp flycheck lsp-treemacs which-key lsp-java fzf org-bullets lsp-mode doom-themes solarized-theme use-package evil)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(org-hide ((t nil))))
 (put 'downcase-region 'disabled nil)
 
 (use-package fzf)
+(put 'scroll-left 'disabled nil)
+
+(use-package projectile
+  :init (projectile-mode +1)
+  :config
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+  )
+
+;; lsp stuff
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package lsp-treemacs
+  :config
+  (lsp-treemacs-sync-mode 1))
+
+(use-package helm-lsp
+  :config
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol)
+  )
+
+(use-package dap-mode
+  :config
+  (setq dap-auto-configure-features '(sessions locals controls tooltip))
+  )
+
+(use-package lsp-java
+  :init
+  (setq lsp-java-format-settings-url "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml"
+	lsp-java-format-settings-profile "GoogleStyle")
+  :hook
+  (add-hook 'java-mode-hook 'lsp)
+    )
